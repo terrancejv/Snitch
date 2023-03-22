@@ -1,11 +1,13 @@
 import datetime
 import discord
-import configs
 from discord.ext import commands
+import configs
 
-bot = discord.Client(intents=discord.Intents.all())  
+#bot = discord.Client(intents = discord.Intents.all())  
+bot = commands.Bot(command_prefix="!", intents = discord.Intents.all())
 
 ten_seconds = datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(seconds = 10)
+bot.sniped_messages = {}
 ROLE_NAME = ""
 MOD_LOG_CHANNEL_NAME = ""
 MODLOG_COLORS = {"BAN": 0xeb4034, "ADDROLE": 0xeda239, "REMOVEROLE": 0x56c470, "UNBAN": 0x4fb09e, "KICK": 0x559ced}
@@ -154,14 +156,20 @@ async def on_member_update(before, after):
         await log(guild = after.guild, type = "REMOVEROLE", user = found_entry.user, target = after)
 
 async def get_help_embed():
-    em = discord.Embed(title="Help!", description="", color=discord.Color.green())
-    em.description += f"**{bot.command_prefix}set_reaction <role> <msg> <emoji>** : Sets the reaction role for the given role, message and emoji. \n"
-    em.description += f"**{bot.command_prefix}set_welcome_channel <new-channel> <message>** : Sets the guild's welcome channel to the given channel and the welcome message to the given message. \n"
-    em.set_footer(text="Thanks for using me!")
+    em = discord.Embed(title="Ain't no snitchin' round here.", description="I'm just here to tell you a lil sum sum.", color=discord.Color.green())
+    em.description += f"**{bot.command_prefix}set_log_channel <channel>** : This is where I will report any major actions done by the moderators. \n"
+    em.description += f"**{bot.command_prefix}set_role <role>** : I will keep a look out for who adds or removes this role. \n"
+    em.description += f"**{bot.command_prefix}get_bans**: I will tell you about every ban that has occurred. \n"
+    em.description += f"**{bot.command_prefix}get_unbans** : I will tell you who unbanned who. \n"
+    em.description += f"**{bot.command_prefix}get_kicks** : I will share a little something I know about who got kicked. \n"
+    em.description += f"**{bot.command_prefix}dm <user> <message>** : I may or may not let everyone know what you said to this person. \n"
+    em.description += f"**{bot.command_prefix}dm_all <message>** : What you have to say will be everyone's concern. \n"
+    em.description += f"**{bot.command_prefix}see_deleted_messages** : Somebody might have said something they deeply regret. \n"
+    em.set_footer(text="You didn't hear any of this from me though.")
     return em
 
 @bot.command()
-async def help(ctx):
+async def get_help(ctx):
     em = await get_help_embed()
     await ctx.send(embed=em)
 
@@ -236,7 +244,7 @@ async def dm_all(ctx, *, args=None):
         await ctx.channel.send(f"I know you want to message everyone in the server, but you didn't say anything {str(ctx.author.mention)}.")
 
 @bot.command()
-async def snipe(ctx):
+async def see_deleted_messages(ctx):
     try:
         contents, author, channel_name, time = bot.sniped_messages[ctx.guild.id]
     except:
