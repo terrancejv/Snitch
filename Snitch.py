@@ -156,7 +156,7 @@ async def on_member_update(before, after):
         await log(guild = after.guild, type = "REMOVEROLE", user = found_entry.user, target = after)
 
 async def get_help_embed():
-    em = discord.Embed(title="Ain't no snitchin' round here.", description="I'm just here to tell you a lil sum sum.", color=discord.Color.green())
+    em = discord.Embed(title="Hi", description="I cannot be banned or kicked.\n", color=discord.Color.green())
     em.description += f"**{bot.command_prefix}set_log_channel <channel>** : This is where I will report any major actions done by the moderators. \n"
     em.description += f"**{bot.command_prefix}set_role <role>** : I will keep a look out for who adds or removes this role. \n"
     em.description += f"**{bot.command_prefix}get_bans**: I will tell you about every ban that has occurred. \n"
